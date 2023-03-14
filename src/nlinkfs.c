@@ -188,7 +188,7 @@ static int nlinkfs_unlink(const char *path)
 static int nlinkfs_symlink(const char *path, const char *link)
 {
 	int fd;
-	ssize_t w1, w2, w3, s1, s2, s3;
+	ssize_t w1, w2, w3, w4, s1, s2, s3;
 	GString *rpath = NULL;
 
 	rpath = get_realpath(rpath, link);
@@ -207,8 +207,10 @@ static int nlinkfs_symlink(const char *path, const char *link)
 	w1 = write(fd, NLINKFS_MAGIC, s1);
 	w2 = write(fd, "\n", s2);
 	w3 = write(fd, path, s3);
+    w4 = write(fd, "\n", s2);
+    
 	close(fd);
-	if (w1 < s1 || w2 < s2 || w3 < s3) {
+	if (w1 < s1 || w2 < s2 || w3 < s3 || w4 < s2) {
 		return -EIO;
 	}
 
